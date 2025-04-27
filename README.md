@@ -17,3 +17,4 @@ To run this project locally, follow these steps:
    ```bash
    git clone https://github.com/kerembuekrue/LatteArtClassifier.git
    cd LatteArtClassifier
+
