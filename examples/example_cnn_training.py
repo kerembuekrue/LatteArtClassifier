@@ -44,7 +44,7 @@ criterion = torch.nn.CrossEntropyLoss()
 # TRAIN MODEL
 #####################################
 model.train()
-epochs = 12
+epochs = 100
 # Track the loss values
 train_losses = []
 val_losses = []
