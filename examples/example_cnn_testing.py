@@ -35,29 +35,29 @@ images, labels = next(iter(test_loader))
 outputs = model(images)
 _, preds = torch.max(outputs, 1)
 
-# # Plot the first three images
-# fig, axes = plt.subplots(1, 3, figsize=(15, 5))
-# for i in range(3):
-#     # Denormalize the image
-#     image = images[i].permute(1, 2, 0).cpu().numpy()
-#     image = (image * 0.5) + 0.5  # Denormalize
-#
-#     # Ensure image values are in valid range
-#     image = np.clip(image, 0, 1)
-#
-#     # Get the actual and predicted labels
-#     actual = class_names[labels[i]]
-#     predicted = class_names[preds[i]]
-#     title = f"Actual: {actual}\nPredicted: {predicted}"
-#
-#     # Plot image with label info
-#     axes[i].imshow(image)
-#     axes[i].set_title(title)
-#     axes[i].axis('off')
-#
-# # plt.tight_layout()
-# plt.savefig('../output/prediction_examples.png')
-# plt.show()
+# Plot the first three images
+fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+for i in range(3):
+    # Denormalize the image
+    image = images[i].permute(1, 2, 0).cpu().numpy()
+    image = (image * 0.5) + 0.5  # Denormalize
+
+    # Ensure image values are in valid range
+    image = np.clip(image, 0, 1)
+
+    # Get the actual and predicted labels
+    actual = class_names[labels[i]]
+    predicted = class_names[preds[i]]
+    title = f"Actual: {actual}\nPredicted: {predicted}"
+
+    # Plot image with label info
+    axes[i].imshow(image)
+    axes[i].set_title(title)
+    axes[i].axis('off')
+
+# plt.tight_layout()
+plt.savefig('../output/prediction_examples.png')
+plt.show()
 
 # Complete the evaluation on the whole test set
 with torch.no_grad():

@@ -11,7 +11,11 @@ import matplotlib.pyplot as plt
 transform = transforms.Compose([
     transforms.Resize((256, 256)),  # Resize all images
     transforms.ToTensor(),  # Convert images to PyTorch tensors
-    transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])  # Normalize
+    transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),  # Normalize
+    transforms.RandomHorizontalFlip(),
+    transforms.RandomRotation(15),
+    transforms.RandomResizedCrop(256, scale=(0.8, 1.0)),
+    transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2),
 ])
 
 # load training dataset
@@ -24,9 +28,6 @@ val_size = len(full_dataset) - train_size
 # Randomly split the dataset
 training_dataset, val_dataset = random_split(full_dataset, [train_size, val_size])
 
-train_loader = DataLoader(training_dataset, batch_size=32, shuffle=True)
-
-
 # Create DataLoader for training and validation sets
 train_loader = DataLoader(training_dataset, batch_size=32, shuffle=True)
 val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False)
@@ -35,14 +36,15 @@ val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False)
 # CHOOSE MODEL
 #####################################
 model = CNN()
-optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+optimizer = torch.optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-4)
+
 criterion = torch.nn.CrossEntropyLoss()
 
 #####################################
 # TRAIN MODEL
 #####################################
 model.train()
-epochs = 1
+epochs = 12
 # Track the loss values
 train_losses = []
 val_losses = []
@@ -80,14 +82,8 @@ for epoch in range(epochs):
     avg_val_loss = val_loss / val_batch_count
     val_losses.append(avg_val_loss)
 
-    # Print losses every 10 epochs
-    # if epoch % 10 == 0:
+    # Print losses
     print(f"Epoch {epoch:3d} - Train Loss: {avg_train_loss:.5e} - Val Loss: {avg_val_loss:.5e}")
-
-    # # Calculate average loss for the epoch
-    # avg_loss = running_loss / batch_count
-    # if epoch % 10 == 0:
-    #     print("Epoch {:3d} - Avg Loss: {:.5e}".format(epoch, avg_loss))
 
 # Or save just the model state dictionary (recommended approach)
 torch.save(model.state_dict(), '../output/model_state.pth')
